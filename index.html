@@ -1,36 +1,523 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LAIR4everJack</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>LAIR4everJack services S.A</title>
+  <meta name="description" content="LAIR4everJack services S.A — Électricité, Plomberie, Informatique, Panneaux solaires & Inverter. Support & assistance." />
+  <style>
+    :root{
+      --bg:#061226; --card:#071430; --muted:#9fb0c7; --accent:#00c7a3; --accent2:#5f8bff;
+      --danger:#ff6b6b; --success:#2ee6a7; --radius:12px; --glass:rgba(255,255,255,0.03);
+      font-family:Inter, system-ui, "Segoe UI", Roboto, Arial, Helvetica, sans-serif;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:linear-gradient(180deg,#021223 0%,var(--bg) 100%);color:#eaf4fb;padding:22px; -webkit-font-smoothing:antialiased}
+    .wrap{max-width:1150px;margin:0 auto}
+
+    header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px}
+    .logo-svglink{display:flex;align-items:center;gap:12px}
+    .brand-title{font-weight:800;font-size:18px}
+    nav a{color:var(--muted);text-decoration:none;margin-left:12px}
+    nav a:hover{color:var(--accent)}
+
+    .hero{display:grid;grid-template-columns:1fr 360px;gap:18px;align-items:start}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent); padding:18px;border-radius:var(--radius); border:1px solid rgba(255,255,255,0.03)}
+    .small{color:var(--muted);font-size:13px}
+    .cta{margin-top:12px;display:flex;gap:10px}
+
+    .btn{background:var(--accent);color:#03231f;border:none;padding:9px 12px;border-radius:10px;font-weight:700;cursor:pointer}
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);padding:8px 10px;border-radius:10px;cursor:pointer}
+
+    .services{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+    .service{display:flex;gap:12px;align-items:center;padding:12px;border-radius:10px;background:linear-gradient(90deg, rgba(255,255,255,0.01), transparent)}
+    .service .icon{width:56px;height:56px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800}
+
+    /* distinct color for each service */
+    .svc-electric{background:linear-gradient(135deg,#ffd27a,#ffb347); color:#08110a}
+    .svc-plumb{background:linear-gradient(135deg,#a6d8ff,#78a9ff); color:#042033}
+    .svc-it{background:linear-gradient(135deg,#d9b3ff,#b085ff); color:#2c0f4a}
+    .svc-install{background:linear-gradient(135deg,#b3ffda,#5fe8a8); color:#033027}
+    .svc-solar{background:linear-gradient(135deg,#fff39a,#ffd166); color:#2a2000}
+
+    /* forms */
+    form input, form textarea, .input{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+    textarea{min-height:100px;resize:vertical}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+    /* auth session */
+    #sessionInfo{display:none;padding:10px;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#031613;font-weight:700}
+
+    /* chat */
+    #chatMessages{height:220px;overflow:auto;padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent)}
+    .msg{padding:8px;margin-bottom:8px;border-radius:8px}
+    .msg.user{text-align:right;background:rgba(255,255,255,0.02)}
+    .msg.ai{background:rgba(0,200,160,0.08);color:#02201a}
+
+    /* faq */
+    .faq-question{cursor:pointer;padding:10px;border-radius:8px}
+    .faq-answer{display:none;padding:8px;color:var(--muted);font-size:14px}
+
+    /* map */
+    #mapSection{display:none;margin-top:12px}
+    #mapDiv{width:100%;height:420px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.04)}
+
+    /* animations */
+    @keyframes fadeInUp {from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes shake {0%{transform:translateX(0)}25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-6px)}100%{transform:translateX(0)}}
+    .fade-in-up{animation:fadeInUp .5s ease both}
+    .shake{animation:shake .5s}
+    .glow{box-shadow:0 8px 28px rgba(0,200,160,0.12)}
+
+    /* responsive */
+    @media (max-width:980px){.hero{grid-template-columns:1fr}.services{grid-template-columns:1fr 1fr}}
+    @media (max-width:620px){.form-row{grid-template-columns:1fr}}
+  </style>
 </head>
 <body>
-  <header>
-    <h1>LAIR4everJack Services</h1>
-  </header>
+  <div class="wrap">
+    <!-- HEADER with inline SVG logo -->
+    <header>
+      <div class="logo-svglink">
+        <!-- Inline SVG logo: stylized L4J with colored accents (you can replace colors) -->
+        <svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="g1" x1="0" x2="1">
+              <stop offset="0" stop-color="#0057ff"/>
+              <stop offset="1" stop-color="#00d4a3"/>
+            </linearGradient>
+            <linearGradient id="g2" x1="0" x2="1">
+              <stop offset="0" stop-color="#ff8a00"/>
+              <stop offset="1" stop-color="#ffd27a"/>
+            </linearGradient>
+          </defs>
+          <rect rx="18" ry="18" width="100" height="100" fill="#021724"/>
+          <text x="50%" y="54%" font-family="Helvetica, Arial" font-weight="800" font-size="36" fill="url(#g1)" text-anchor="middle" dominant-baseline="middle">L4J</text>
+          <!-- small icons as circles -->
+          <circle cx="78" cy="22" r="6" fill="url(#g2)" />
+          <circle cx="22" cy="78" r="6" fill="#b3e9ff" />
+        </svg>
+        <div>
+          <div class="brand-title">LAIR4everJack services S.A</div>
+          <div class="small">Électricité • Plomberie • Informatique • Panneaux solaires</div>
+        </div>
+      </div>
+      <nav>
+        <a href="#about">À propos</a>
+        <a href="#assistance">Assistance</a>
+        <a href="#aiAssistant">Assistant AI</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
 
-  <main>
-    <section id="assistanceSection">
-      <h2>Assistant AI</h2>
-      <form id="assistanceContactForm">
-        <input type="text" id="serviceDomain" placeholder="Domaine du service" required>
-        <input type="text" id="clientName" placeholder="Nom" required>
-        <input type="email" id="clientEmail" placeholder="Email" required>
-        <input type="tel" id="clientPhone" placeholder="Téléphone">
-        <input type="text" id="clientCountry" placeholder="Pays">
-        <input type="text" id="clientLocation" placeholder="Ville">
-        <textarea id="clientMessage" placeholder="Votre message" required></textarea>
-        <button type="submit">Envoyer</button>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="card">
+        <h1>Solutions techniques fiables — LAIR4everJack</h1>
+        <p class="small">Interventions rapides, installations professionnelles, maintenance et support dédié.</p>
+        <div style="margin-top:10px">
+          <div><strong>WhatsApp:</strong> <a style="color:var(--accent)" href="https://wa.me/50948202694" target="_blank">+509 4820 2694</a> / <a style="color:var(--accent)" href="https://wa.me/50938912118" target="_blank">+509 3891 2118</a></div>
+          <div><strong>Contact:</strong> +509 5517 8664 / +509 4036 0651</div>
+          <div><strong>Email:</strong> <a style="color:var(--accent)" href="mailto:jackson19joseph83@gmail.com">jackson19joseph83@gmail.com</a></div>
+        </div>
+
+        <div class="cta" role="group" aria-label="Actions">
+          <a class="btn" href="#assistance">Demander une assistance</a>
+          <button class="btn-ghost" id="openRegister">S'inscrire</button>
+          <button class="btn-ghost" id="openLogin">Se connecter</button>
+        </div>
+
+        <div class="services fade-in-up" aria-hidden="false">
+          <div class="service">
+            <div class="icon svc-electric">⚡</div>
+            <div><h4>Électricité <span class="small muted">(Pro)</span></h4><p class="small">Câblage, dépannage et mise aux normes.</p></div>
+          </div>
+          <div class="service">
+            <div class="icon svc-plumb">💧</div>
+            <div><h4>Plomberie</h4><p class="small">Réparations, installations sanitaires, urgences.</p></div>
+          </div>
+          <div class="service">
+            <div class="icon svc-it">💻</div>
+            <div><h4>Informatique</h4><p class="small">Support matériel & logiciel, réseaux et sécurité.</p></div>
+          </div>
+        </div>
+
+        <div style="margin-top:10px" class="small muted">Nous réalisons aussi : <strong>Installation & Réparation</strong>, <strong>Inventaire</strong> et systèmes <strong>Panneaux Solaires & Inverter</strong>.</div>
+      </div>
+
+      <!-- CONTACT BOX -->
+      <aside class="card">
+        <h3>Contact rapide</h3>
+        <p class="small">Cliquer pour ouvrir WhatsApp ou mail</p>
+        <ul class="small muted" style="list-style:none;padding-left:0;margin-top:10px">
+          <li>Email: <a href="mailto:jackson19joseph83@gmail.com" style="color:var(--accent)">jackson19joseph83@gmail.com</a></li>
+          <li>WhatsApp: <a href="https://wa.me/50948202694" style="color:var(--accent)">+509 4820 2694</a></li>
+          <li>WhatsApp: <a href="https://wa.me/50938912118" style="color:var(--accent)">+509 3891 2118</a></li>
+          <li>Téléphone contact: +509 5517 8664</li>
+          <li>Backup: +509 4036 0651</li>
+        </ul>
+        <div style="margin-top:12px">
+          <a class="btn" href="#contact">Formulaire & Contrat</a>
+        </div>
+      </aside>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="card" style="margin-top:18px;">
+      <h2>À propos</h2>
+      <p class="small" style="margin-top:8px">LAIR4everJack services S.A est une entreprise spécialisée dans les interventions techniques : électricité, plomberie, informatique et solutions solaires (panneaux & inverters). Notre mission : fournir des solutions durables, sécurisées et rapides — en combinant expertise technique et service clientèle réactif.</p>
+      <ul style="margin-top:8px;color:var(--muted)">
+        <li><strong>Vison :</strong> Un accès fiable à l'énergie et aux services techniques pour tous.</li>
+        <li><strong>Valeurs :</strong> Sécurité, transparence, réactivité et qualité.</li>
+        <li><strong>Engagement :</strong> Interventions selon les normes, garantie et suivi.</li>
+      </ul>
+    </section>
+
+    <!-- ASSISTANCE -->
+    <section id="assistance" class="card" style="margin-top:18px;">
+      <h2>Assistance & Services</h2>
+      <p class="small">Choisissez une catégorie — chaque demande ouvre un formulaire dédié.</p>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+        <button class="btn-ghost" onclick="openAssistanceForm('Électricité')">Électricité</button>
+        <button class="btn-ghost" onclick="openAssistanceForm('Plomberie')">Plomberie</button>
+        <button class="btn-ghost" onclick="openAssistanceForm('Informatique')">Informatique</button>
+        <button class="btn-ghost" onclick="openAssistanceForm('Installation & Réparation')">Installation & Réparation</button>
+        <button class="btn-ghost" onclick="openAssistanceForm('Panneaux Solaires & Inverter')">Panneaux Solaires & Inverter</button>
+      </div>
+
+      <div id="assistanceForm" style="display:none;margin-top:12px">
+        <form id="assistanceContactForm">
+          <input id="serviceDomain" type="hidden" />
+          <div class="form-row" style="margin-bottom:8px">
+            <input id="clientName" placeholder="Votre nom" required>
+            <input id="clientEmail" type="email" placeholder="Votre email" required>
+          </div>
+          <div class="form-row" style="margin-bottom:8px">
+            <input id="clientPhone" placeholder="Téléphone (WhatsApp)">
+            <input id="clientCountry" placeholder="Pays (ex: Haïti)">
+          </div>
+          <div style="margin-bottom:8px">
+            <input id="clientLocation" placeholder="Ville / Adresse (optionnel)">
+          </div>
+          <textarea id="clientMessage" placeholder="Décrivez votre demande..." required></textarea>
+          <div style="margin-top:8px;display:flex;gap:8px">
+            <button class="btn" type="submit">Envoyer la demande</button>
+            <button type="button" class="btn-ghost" onclick="closeAssistanceForm()">Annuler</button>
+          </div>
+        </form>
+      </div>
+
+      <div id="mapSection" class="card" style="margin-top:12px;display:none">
+        <h3>Localisation (carte)</h3>
+        <div id="mapDiv" aria-hidden="false"></div>
+        <p class="small muted" style="margin-top:8px">Carte générée via OpenStreetMap (Nominatim). Si la localisation ne s'affiche pas, vérifie l'adresse fournie.</p>
+      </div>
+    </section>
+
+    <!-- AUTH -->
+    <section id="auth" class="card" style="margin-top:18px">
+      <h2>Comptes & Connexion</h2>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <div style="flex:1;min-width:300px">
+          <h4>Inscription</h4>
+          <form id="registerForm">
+            <div class="form-row" style="margin-bottom:8px">
+              <input id="regName" placeholder="Nom complet" required>
+              <input id="regCountry" placeholder="Pays" required>
+            </div>
+            <div class="form-row" style="margin-bottom:8px">
+              <input id="regEmail" type="email" placeholder="Email" required>
+              <input id="regPhone" placeholder="Téléphone (WhatsApp)">
+            </div>
+            <div style="margin-bottom:8px">
+              <input id="regPassword" type="password" placeholder="Mot de passe (min 6)" required>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn" type="submit">Créer le compte</button>
+              <button id="regClear" type="button" class="btn-ghost">Effacer</button>
+            </div>
+          </form>
+        </div>
+
+        <div style="flex:1;min-width:300px">
+          <h4>Connexion</h4>
+          <form id="loginForm">
+            <div style="margin-bottom:8px"><input id="loginEmail" type="email" placeholder="Email" required></div>
+            <div style="margin-bottom:8px"><input id="loginPassword" type="password" placeholder="Mot de passe" required></div>
+            <div style="display:flex;gap:8px">
+              <button class="btn" type="submit">Se connecter</button>
+              <button type="button" id="logoutBtn" class="btn-ghost">Se déconnecter</button>
+            </div>
+          </form>
+          <div id="sessionInfo" aria-live="polite" style="margin-top:10px">Bienvenue, <span id="sessionName"></span> — <span id="sessionEmail" class="small muted"></span></div>
+        </div>
+      </div>
+      <p class="small muted" style="margin-top:8px">*Démonstration client-side. Pour un vrai site, je conseille connexion à un backend sécurisé.*</p>
+    </section>
+
+    <!-- AI Assistant -->
+    <section id="aiAssistant" class="card" style="margin-top:18px">
+      <h2>Assistant AI - Support client</h2>
+      <div id="chatContainer">
+        <div id="chatMessages" aria-live="polite"></div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <input id="chatInput" placeholder="Posez votre question..." style="flex:1" />
+          <button id="chatSend" class="btn">Envoyer</button>
+        </div>
+        <div class="small muted" style="margin-top:6px">Assistant local (réponses automatiques). Pour lier à OpenAI, je peux intégrer l'API sur demande.</div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="card" style="margin-top:18px">
+      <h2>FAQ</h2>
+      <div>
+        <div class="faq-question">Électricité — Quels travaux ?</div>
+        <div class="faq-answer">Installation, réparation, mise aux normes, inspections et maintenance.</div>
+
+        <div class="faq-question">Plomberie — Interventions d'urgence ?</div>
+        <div class="faq-answer">Oui, interventions pour fuites, débouchage et urgences selon disponibilité.</div>
+
+        <div class="faq-question">Panneaux solaires — Fournissez-vous installation complète ?</div>
+        <div class="faq-answer">Oui, inventaire, dimensionnement, installation panneaux + onduleur + batterie, et maintenance.</div>
+
+        <div class="faq-question">Informatique — Aidez-vous à distance ?</div>
+        <div class="faq-answer">Oui, assistance logicielle et réseau en remote, et interventions sur site pour le matériel.</div>
+      </div>
+    </section>
+
+    <!-- CONTRACT & CONTACT -->
+    <section id="contact" class="card" style="margin-top:18px">
+      <h2>Contrat & Contact</h2>
+      <p class="small muted">Téléchargez notre contrat type ou envoyez une demande via le formulaire.</p>
+      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+        <a class="btn" href="#" id="downloadContract">Télécharger le contrat</a>
+        <a class="btn-ghost" href="mailto:jackson19joseph83@gmail.com">Envoyer un email</a>
+        <a class="btn-ghost" href="https://wa.me/50948202694" target="_blank">WhatsApp</a>
+      </div>
+
+      <h3 style="margin-top:12px">Formulaire de contact général</h3>
+      <form id="generalContactForm">
+        <div class="form-row" style="margin-bottom:8px">
+          <input id="gName" placeholder="Nom">
+          <input id="gEmail" placeholder="Email">
+        </div>
+        <textarea id="gMessage" placeholder="Votre message"></textarea>
+        <div style="margin-top:8px"><button class="btn" type="submit">Envoyer</button></div>
       </form>
     </section>
-  </main>
 
-  <footer>
-    <p>© 2025 LAIR4everJack</p>
-  </footer>
+    <footer style="margin-top:22px;text-align:center;color:var(--muted)">
+      © LAIR4everJack services S.A — Contact: jackson19joseph83@gmail.com
+    </footer>
+  </div>
 
-  <script src="script.js"></script>
+  <!-- Sounds (public demo URLs; tu peux remplacer par fichiers locaux) -->
+  <audio id="soundSuccess" src="https://www.soundjay.com/buttons/sounds/button-4.mp3" preload="auto"></audio>
+  <audio id="soundError" src="https://www.soundjay.com/buttons/sounds/button-2.mp3" preload="auto"></audio>
+  <audio id="soundNotify" src="https://www.soundjay.com/buttons/sounds/button-09.mp3" preload="auto"></audio>
+
+  <script>
+  /* --------- Helpers (hashing, storage) ---------- */
+  const USERS_KEY = 'lair_users_v2';
+  const REQS_KEY = 'lair_requests_v1';
+  async function hashPassword(password){
+    const enc = new TextEncoder();
+    const buf = await crypto.subtle.digest('SHA-256', enc.encode(password));
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+  function loadUsers(){ try{ return JSON.parse(localStorage.getItem(USERS_KEY))||[] }catch(e){return[]} }
+  function saveUsers(u){ localStorage.setItem(USERS_KEY, JSON.stringify(u)) }
+  function loadReqs(){ try{ return JSON.parse(localStorage.getItem(REQS_KEY))||[] }catch(e){return[]} }
+  function saveReqs(r){ localStorage.setItem(REQS_KEY, JSON.stringify(r)) }
+
+  /* --------- Register --------- */
+  document.getElementById('registerForm').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const name = document.getElementById('regName').value.trim();
+    const country = document.getElementById('regCountry').value.trim();
+    const email = document.getElementById('regEmail').value.trim().toLowerCase();
+    const phone = document.getElementById('regPhone').value.trim();
+    const pass = document.getElementById('regPassword').value;
+    if(!name||!email||!pass){ document.getElementById('soundError').play(); alert('Remplissez les champs requis'); return; }
+    if(pass.length < 6){ document.getElementById('soundError').play(); alert('Mot de passe trop court (>=6)'); return; }
+    const users = loadUsers();
+    if(users.find(u=>u.email===email)){ document.getElementById('soundError').play(); alert('Email déjà utilisé'); return; }
+    const passHash = await hashPassword(pass);
+    users.push({name,email,phone,country,passHash,created:Date.now()});
+    saveUsers(users);
+    document.getElementById('soundSuccess').play();
+    alert('Inscription réussie — connectez-vous maintenant');
+    document.getElementById('registerForm').reset();
+  });
+  document.getElementById('regClear').addEventListener('click', ()=>document.getElementById('registerForm').reset());
+
+  /* --------- Login / Session --------- */
+  document.getElementById('loginForm').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+    const pass = document.getElementById('loginPassword').value;
+    const users = loadUsers();
+    const passHash = await hashPassword(pass);
+    const user = users.find(u=>u.email===email && u.passHash===passHash);
+    if(!user){ document.getElementById('soundError').play(); document.querySelector('#loginForm').classList.add('shake'); setTimeout(()=>document.querySelector('#loginForm').classList.remove('shake'),600); alert('Email ou mot de passe incorrect'); return; }
+    localStorage.setItem('lair_current_user', JSON.stringify(user));
+    document.getElementById('sessionName').innerText = user.name;
+    document.getElementById('sessionEmail').innerText = user.email;
+    document.getElementById('sessionInfo').style.display = 'block';
+    document.getElementById('soundSuccess').play();
+    document.querySelector('#loginForm').classList.add('glow'); setTimeout(()=>document.querySelector('#loginForm').classList.remove('glow'),900);
+  });
+
+  document.getElementById('logoutBtn').addEventListener('click', ()=>{
+    localStorage.removeItem('lair_current_user');
+    document.getElementById('sessionInfo').style.display = 'none';
+    document.getElementById('soundNotify').play();
+    alert('Déconnecté');
+  });
+
+  // restore session
+  window.addEventListener('load', ()=>{
+    const cu = JSON.parse(localStorage.getItem('lair_current_user') || 'null');
+    if(cu){ document.getElementById('sessionName').innerText = cu.name; document.getElementById('sessionEmail').innerText = cu.email; document.getElementById('sessionInfo').style.display='block'; }
+  });
+
+  /* ---------- Assistance form ---------- */
+  window.openAssistanceForm = function(domain){
+    document.getElementById('serviceDomain').value = domain;
+    document.getElementById('assistanceForm').style.display = 'block';
+    document.getElementById('soundNotify').play();
+    document.getElementById('clientName').focus();
+    window.scrollTo({top:document.getElementById('assistanceForm').offsetTop - 40, behavior:'smooth'});
+  }
+  function closeAssistanceForm(){ document.getElementById('assistanceForm').style.display = 'none' }
+  window.closeAssistanceForm = closeAssistanceForm;
+
+  document.getElementById('assistanceContactForm').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const domain = document.getElementById('serviceDomain').value;
+    const name = document.getElementById('clientName').value.trim();
+    const email = document.getElementById('clientEmail').value.trim();
+    const phone = document.getElementById('clientPhone').value.trim();
+    const country = document.getElementById('clientCountry').value.trim();
+    const location = document.getElementById('clientLocation').value.trim();
+    const msg = document.getElementById('clientMessage').value.trim();
+    if(!name||!email||!msg){ document.getElementById('soundError').play(); alert('Remplissez les champs requis'); return; }
+    // store request locally (demo)
+    const reqs = loadReqs();
+    const req = {domain,name,email,phone,country,location,msg,ts:Date.now()};
+    reqs.push(req); saveReqs(reqs);
+    // open mail client with prefilled content (so you're notified)
+    const subject = encodeURIComponent('Demande - ' + domain + ' - ' + name);
+    const body = encodeURIComponent(`Service: ${domain}\nNom: ${name}\nEmail: ${email}\nPhone: ${phone}\nPays: ${country}\nLocation: ${location}\n\nMessage:\n${msg}`);
+    // open mail client
+    window.location.href = `mailto:jackson19joseph83@gmail.com?subject=${subject}&body=${body}`;
+    document.getElementById('soundSuccess').play();
+    alert('Demande enregistrée et cliente notifiée par mail (client-side demo).');
+    document.getElementById('assistanceContactForm').reset();
+    document.getElementById('assistanceForm').style.display='none';
+    // optionally show map if location available
+    if(location || country){ await showLocationOnMap((location? location + ', ' : '') + (country? country : '')); }
+  });
+
+  /* ---------- Map (Nominatim + OSM embed) ---------- */
+  async function showLocationOnMap(query){
+    if(!query) return;
+    try {
+      const url = 'https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(query);
+      const res = await fetch(url, {headers:{'Accept':'application/json'}});
+      const data = await res.json();
+      if(!data || !data.length){ document.getElementById('soundError').play(); alert('Localisation introuvable'); return; }
+      const lat = parseFloat(data[0].lat), lon = parseFloat(data[0].lon);
+      const bbox = `${lon-0.02},${lat-0.02},${lon+0.02},${lat+0.02}`;
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat}%2C${lon}`;
+      iframe.style.width='100%'; iframe.style.height='420px'; iframe.style.border='none';
+      const mapDiv = document.getElementById('mapDiv');
+      mapDiv.innerHTML = ''; mapDiv.appendChild(iframe);
+      document.getElementById('mapSection').style.display = 'block';
+      document.getElementById('soundNotify').play();
+      window.scrollTo({top:document.getElementById('mapSection').offsetTop - 60,behavior:'smooth'});
+    } catch(err){
+      console.error(err);
+      document.getElementById('soundError').play();
+      alert('Erreur lors de la géolocalisation (vérifiez votre connexion).');
+    }
+  }
+
+  /* ---------- General contact form ---------- */
+  document.getElementById('generalContactForm').addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const name = document.getElementById('gName').value.trim();
+    const email = document.getElementById('gEmail').value.trim();
+    const msg = document.getElementById('gMessage').value.trim();
+    if(!name||!email||!msg){ document.getElementById('soundError').play(); alert('Remplissez tous les champs'); return; }
+    // send via mailto (client) and store a copy locally (demo)
+    const subject = encodeURIComponent('Contact site - ' + name);
+    const body = encodeURIComponent(`Nom: ${name}\nEmail: ${email}\n\n${msg}`);
+    window.location.href = `mailto:jackson19joseph83@gmail.com?subject=${subject}&body=${body}`;
+    document.getElementById('soundSuccess').play();
+    alert('Message envoyé (client-side demo).');
+    document.getElementById('generalContactForm').reset();
+  });
+
+  /* ---------- FAQ toggles ---------- */
+  document.querySelectorAll('.faq-question').forEach(q=>{
+    q.addEventListener('click', ()=>{
+      const a = q.nextElementSibling;
+      const isOpen = a.style.display==='block';
+      if(isOpen){ a.style.display='none'; document.getElementById('soundError').play(); }
+      else{ a.style.display='block'; document.getElementById('soundNotify').play(); }
+    });
+  });
+
+  /* ---------- Contract download (placeholder) ---------- */
+  document.getElementById('downloadContract').addEventListener('click',(e)=>{
+    e.preventDefault();
+    const contractText = `CONTRAT DE SERVICE - LAIR4everJack services S.A\n\nClient: __________________\nService: __________________\nDate: __________________\n\nConditions: Installation, réparation, maintenance selon devis...`;
+    const blob = new Blob([contractText], {type:'text/plain'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href=url; a.download='contrat_LAIR4everJack_services.txt'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  });
+
+  /* ---------- Quick buttons ---------- */
+  document.getElementById('openRegister').addEventListener('click', ()=>{ window.location.hash='#auth'; document.getElementById('regName').focus() });
+  document.getElementById('openLogin').addEventListener('click', ()=>{ window.location.hash='#auth'; document.getElementById('loginEmail').focus() });
+
+  /* ---------- Chat AI (mock) ---------- */
+  const chatMessages = document.getElementById('chatMessages');
+  document.getElementById('chatSend').addEventListener('click', sendChat);
+  document.getElementById('chatInput').addEventListener('keydown', (e)=>{ if(e.key==='Enter') sendChat(); });
+
+  function sendChat(){
+    const input = document.getElementById('chatInput').value.trim();
+    if(!input) return;
+    // user message
+    const um = document.createElement('div'); um.className='msg user'; um.innerHTML = `<div><b>Vous:</b></div><div>${escapeHtml(input)}</div>`;
+    chatMessages.appendChild(um);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    document.getElementById('soundNotify').play();
+    document.getElementById('chatInput').value='';
+    // mock response
+    setTimeout(()=>{
+      const resp = generateAIResponse(input);
+      const am = document.createElement('div'); am.className='msg ai'; am.innerHTML = `<div><b>Assistant AI:</b></div><div>${escapeHtml(resp)}</div>`;
+      chatMessages.appendChild(am);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      document.getElementById('soundSuccess').play();
+    }, 600);
+  }
+  function generateAIResponse(q){
+    q = q.toLowerCase();
+    if(q.includes('devis')||q.includes('prix')) return 'Pour un devis précis, envoyez détails via le formulaire d\'assistance (adresse + description).';
+    if(q.includes('urgence')) return 'En cas d\'urgence appelez WhatsApp +509 4820 2694 — intervention prioritaire.';
+    if(q.includes('panneau')||q.includes('solaire')||q.includes('inverter')) return 'Nous réalisons l\'inventaire et l\'installation complète panneaux + inverter. Voulez-vous un rendez-vous ?';
+    if(q.includes('contact')||q.includes('numero')) return 'Vous pouvez contacter via WhatsApp +50948202694 ou par email jackson19joseph83@gmail.com.';
+    return 'Merci — un technicien vous répondra bientôt. Pour réponse immédiate utilisez WhatsApp.';
+  }
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+  </script>
 </body>
 </html>
